@@ -4,7 +4,8 @@
 #   docker compose down          # stop
 #   docker compose down -v       # stop + wipe data (re-runs schema on next up)
 #
-# App connects to: localhost:3306 / suntravels / suntravels
+# App connects to: localhost:3307 / suntravels / suntravels
+# (host 3307 → container 3306 so it does not clash with a local MySQL on 3306)
 # Demo users + dummy hotels are seeded by Spring Boot on first API start.
 
 services:

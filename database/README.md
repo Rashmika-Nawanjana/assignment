@@ -13,7 +13,7 @@ Waits until healthy, then:
 | Setting | Value |
 |---------|--------|
 | Host | `localhost` |
-| Port | `3306` |
+| Port | `3307` (mapped from container `3306`) |
 | Database | `suntravels` |
 | User | `suntravels` |
 | Password | `suntravels` |
@@ -28,7 +28,7 @@ docker compose down        # stop
 docker compose down -v     # stop and delete data (fresh schema next up)
 ```
 
-If port `3306` is already used on the machine, change the mapping in `docker-compose.yml` to `"3307:3306"` and update `application.properties` to `localhost:3307`.
+Compose uses host port `3307` to avoid clashing with a local MySQL on `3306`. If you change the left side of `"3307:3306"`, update `backend/.../application.properties` to the same host port.
 
 ## Option B — Local MySQL (no Docker)
 

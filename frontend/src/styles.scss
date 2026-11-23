@@ -1,0 +1,244 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  color: #143848;
+  background: #eef2f5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* Shared ERP form + table polish */
+.erp-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.15rem 1.2rem;
+  background:
+    linear-gradient(180deg, #fbfefe 0%, #f4f8fa 100%);
+  border: 1px solid #d7e3e8;
+  border-radius: 0.85rem;
+  box-shadow: 0 10px 24px rgba(16, 42, 54, 0.04);
+}
+
+.erp-form .form-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.erp-form .section-title {
+  margin: 0;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f6e6a;
+}
+
+.erp-form .field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.erp-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #1d3a48;
+}
+
+.erp-form .hint {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #667987;
+}
+
+.erp-form input,
+.erp-form select,
+.erp-form textarea,
+.table-toolbar input,
+.table-toolbar select,
+.search-box input {
+  width: 100%;
+  padding: 0.62rem 0.75rem;
+  border: 1px solid #c5d4dc;
+  border-radius: 0.55rem;
+  background: #fff;
+  color: #143848;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.erp-form input:focus,
+.erp-form select:focus,
+.erp-form textarea:focus,
+.table-toolbar input:focus,
+.table-toolbar select:focus,
+.search-box input:focus {
+  outline: none;
+  border-color: #1aa6a0;
+  box-shadow: 0 0 0 3px rgba(26, 166, 160, 0.18);
+}
+
+.erp-form input:disabled,
+.erp-form select:disabled {
+  background: #eef3f5;
+  color: #6b7c86;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.table-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid #d7e3e8;
+  border-radius: 0.85rem;
+  box-shadow: 0 10px 24px rgba(16, 42, 54, 0.04);
+}
+
+.table-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.table-toolbar .filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.table-toolbar .filters input {
+  max-width: 260px;
+}
+
+.table-toolbar .filters select {
+  max-width: 180px;
+}
+
+.table-toolbar .meta {
+  color: #667987;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.erp-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e2eaee;
+  border-radius: 0.65rem;
+}
+
+.erp-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.erp-table th,
+.erp-table td {
+  text-align: left;
+  padding: 0.78rem 0.7rem;
+  border-bottom: 1px solid #e8eef1;
+  vertical-align: top;
+}
+
+.erp-table th {
+  background: #f3f7f9;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #4d616c;
+  font-family: 'Syne', sans-serif;
+  white-space: nowrap;
+}
+
+.erp-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.erp-table th.sortable:hover,
+.erp-table th.sorted {
+  color: #0f6e6a;
+  background: #e8f5f3;
+}
+
+.erp-table th .sort-mark {
+  margin-left: 0.25rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+}
+
+.erp-table tbody tr:hover {
+  background: #f7fbfb;
+}
+
+.erp-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (max-width: 760px) {
+  .erp-form .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-toolbar .filters input,
+  .table-toolbar .filters select {
+    max-width: none;
+  }
+}
+
+/* Shared button motion across the ERP */
+button {
+  transition:
+    transform 140ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(16, 42, 54, 0.12);
+}
+
+button:not(:disabled):active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+
+  button:not(:disabled):hover,
+  button:not(:disabled):active {
+    transform: none;
+    box-shadow: none;
+  }
+}

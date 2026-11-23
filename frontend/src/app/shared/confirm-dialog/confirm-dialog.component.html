@@ -1,0 +1,25 @@
+@if (dialog.state(); as state) {
+  @if (state.open) {
+    <div class="overlay" (click)="dialog.cancel()">
+      <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+        <p class="eyebrow">Sun Travels</p>
+        <h2>{{ state.title }}</h2>
+        <p class="message">{{ state.message }}</p>
+
+        <div class="actions">
+          <button type="button" class="ghost" (click)="dialog.cancel()">
+            {{ state.cancelText }}
+          </button>
+          <button
+            type="button"
+            class="confirm"
+            [class.danger]="state.danger"
+            (click)="dialog.confirm()"
+          >
+            {{ state.confirmText }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}

@@ -1,0 +1,82 @@
+<div class="erp-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="mark">ST</span>
+      <div>
+        <strong>Sun Travels</strong>
+        <small>Operations ERP</small>
+      </div>
+    </div>
+
+    <p class="nav-label">Main menu</p>
+    <nav>
+      @if (auth.hasRole('ADMIN')) {
+        <a routerLink="/users" routerLinkActive="active">
+          <span class="icon" aria-hidden="true">US</span>
+          <span>
+            <strong>Users</strong>
+            <small>Accounts & roles</small>
+          </span>
+        </a>
+      }
+      @if (auth.hasRole('ADMIN', 'MANAGER', 'AGENT')) {
+        <a routerLink="/contracts" routerLinkActive="active">
+          <span class="icon" aria-hidden="true">CT</span>
+          <span>
+            <strong>Contracts</strong>
+            <small>Hotel rate sheets</small>
+          </span>
+        </a>
+        <a routerLink="/search" routerLinkActive="active">
+          <span class="icon" aria-hidden="true">SR</span>
+          <span>
+            <strong>Room search</strong>
+            <small>Price & availability</small>
+          </span>
+        </a>
+        <a routerLink="/bookings" routerLinkActive="active">
+          <span class="icon" aria-hidden="true">BK</span>
+          <span>
+            <strong>Bookings</strong>
+            <small>Confirmed stays</small>
+          </span>
+        </a>
+      }
+
+      <p class="nav-label">Account</p>
+      <a routerLink="/profile" routerLinkActive="active">
+        <span class="icon" aria-hidden="true">PR</span>
+        <span>
+          <strong>Profile</strong>
+          <small>Password & details</small>
+        </span>
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="who">
+        <div class="avatar">{{ initials() }}</div>
+        <div>
+          <strong>{{ auth.currentUser()?.fullName || auth.currentUser()?.username }}</strong>
+          <span>{{ auth.currentUser()?.role }}</span>
+        </div>
+      </div>
+      <button type="button" (click)="logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Sun Travels ERP</p>
+        <h1>{{ pageTitle }}</h1>
+      </div>
+      <div class="chip">{{ auth.currentUser()?.role }}</div>
+    </header>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<app-confirm-dialog></app-confirm-dialog>

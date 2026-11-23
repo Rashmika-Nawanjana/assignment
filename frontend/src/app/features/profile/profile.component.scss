@@ -1,0 +1,68 @@
+.panel {
+  background: #fffcf8;
+  border: 1px solid #d7e0e6;
+  border-radius: 1rem;
+  padding: 1.35rem;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #0f6e6a;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0.2rem 0 0;
+  font-family: 'Fraunces', Georgia, serif;
+  color: #143848;
+}
+
+.lede {
+  margin: 0.35rem 0 0;
+  color: #5b6b76;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.erp-form button {
+  border: 0;
+  background: #143848;
+  color: #fff;
+  padding: 0.65rem 1rem;
+  border-radius: 0.55rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ok,
+.err {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.6rem;
+}
+
+.ok {
+  background: #e6f5f0;
+  color: #0f5a4f;
+}
+
+.err {
+  background: #fdeceb;
+  color: #8a2a22;
+}
+
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

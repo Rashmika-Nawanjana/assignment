@@ -1,0 +1,160 @@
+<section class="panel">
+  <header class="head">
+    <div>
+      <p class="eyebrow">Reservations</p>
+      <h2>Bookings</h2>
+      <p class="lede">Review confirmed stays, filter by status, and cancel when needed.</p>
+    </div>
+    <div class="search-box">
+      <input
+        [(ngModel)]="q"
+        name="q"
+        placeholder="Search guest, hotel, room…"
+        (keyup.enter)="search()"
+      />
+      <button type="button" (click)="search()">Search</button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+  @if (success()) {
+    <p class="ok">{{ success() }}</p>
+  }
+
+  <div class="table-card">
+    @if (loading()) {
+      <p class="muted">Loading bookings…</p>
+    } @else if (bookings().length === 0) {
+      <div class="empty-state">
+        <strong>No bookings yet</strong>
+        <p>Create one from Room search when a result shows Available.</p>
+      </div>
+    } @else {
+      <div class="table-toolbar">
+        <div class="filters">
+          <input
+            type="search"
+            [ngModel]="tableQuery()"
+            (ngModelChange)="tableQuery.set($event)"
+            name="tableQuery"
+            placeholder="Filter this page…"
+          />
+          <select
+            [ngModel]="statusFilter()"
+            (ngModelChange)="statusFilter.set($event)"
+            name="statusFilter"
+          >
+            <option value="all">All statuses</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+        <span class="meta">Showing {{ displayedBookings().length }} of {{ bookings().length }} on page</span>
+      </div>
+
+      @if (displayedBookings().length === 0) {
+        <div class="empty-state compact">
+          <strong>No rows match your filters</strong>
+          <p>Clear the text filter or choose “All statuses”.</p>
+        </div>
+      } @else {
+        <div class="erp-table-wrap">
+          <table class="erp-table">
+            <thead>
+              <tr>
+                <th class="sortable" [class.sorted]="sortKey() === 'id'" (click)="sortBy('id')">
+                  ID <span class="sort-mark">{{ sortMark('id') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="sortKey() === 'guestName'"
+                  (click)="sortBy('guestName')"
+                >
+                  Guest <span class="sort-mark">{{ sortMark('guestName') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="sortKey() === 'hotelName'"
+                  (click)="sortBy('hotelName')"
+                >
+                  Hotel / Room <span class="sort-mark">{{ sortMark('hotelName') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="sortKey() === 'checkInDate'"
+                  (click)="sortBy('checkInDate')"
+                >
+                  Stay <span class="sort-mark">{{ sortMark('checkInDate') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="sortKey() === 'totalPrice'"
+                  (click)="sortBy('totalPrice')"
+                >
+                  Price <span class="sort-mark">{{ sortMark('totalPrice') }}</span>
+                </th>
+                <th class="sortable" [class.sorted]="sortKey() === 'status'" (click)="sortBy('status')">
+                  Status <span class="sort-mark">{{ sortMark('status') }}</span>
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (booking of displayedBookings(); track booking.id) {
+                <tr>
+                  <td class="mono">#{{ booking.id }}</td>
+                  <td>
+                    <strong>{{ booking.guestName }}</strong>
+                    <div class="sub">NIC {{ booking.guestNic || '—' }}</div>
+                    <div class="sub">
+                      {{ booking.guestPhone || 'no phone' }}
+                      @if (booking.guestEmail) {
+                        · {{ booking.guestEmail }}
+                      }
+                    </div>
+                    <div class="sub">by {{ booking.bookedBy }}</div>
+                  </td>
+                  <td>
+                    {{ booking.hotelName }}
+                    <div class="sub">
+                      {{ booking.roomTypeName }}
+                      @if (booking.roomNumber) {
+                        · Room {{ booking.roomNumber }}
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    {{ booking.checkInDate }} · {{ booking.numberOfNights }} night(s)
+                    <div class="sub">
+                      {{ booking.roomsRequested }} room(s) · {{ booking.totalAdults }} adults
+                    </div>
+                  </td>
+                  <td class="mono">${{ booking.totalPrice | number: '1.2-2' }}</td>
+                  <td>
+                    <span class="status" [class.ok]="booking.status === 'CONFIRMED'">
+                      {{ booking.status }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (booking.status === 'CONFIRMED') {
+                      <button type="button" class="danger" (click)="cancel(booking)">Cancel</button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <app-pagination
+        [page]="page"
+        [totalPages]="totalPages()"
+        [totalElements]="totalElements()"
+        (pageChange)="onPage($event)"
+      ></app-pagination>
+    }
+  </div>
+</section>

@@ -1,0 +1,257 @@
+.panel {
+  background: #fffcf8;
+  border: 1px solid #d7e0e6;
+  border-radius: 1rem;
+  padding: 1.35rem;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #0f6e6a;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0.2rem 0;
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+.lede {
+  margin: 0;
+  color: #5b6b76;
+  max-width: 42rem;
+}
+
+.rooms-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.room-hint {
+  margin-top: -0.25rem;
+}
+
+.room-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: end;
+  padding: 0.75rem;
+  background: #fff;
+  border: 1px solid #e0e9ed;
+  border-radius: 0.65rem;
+}
+
+button[type='submit'],
+.book {
+  border: 0;
+  background: #143848;
+  color: #fff;
+  padding: 0.65rem 1.05rem;
+  border-radius: 0.55rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.book {
+  background: #0f6e6a;
+  padding: 0.42rem 0.8rem;
+
+  &:hover:not(:disabled) {
+    background: #0c5b58;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+button[type='submit']:hover:not(:disabled) {
+  background: #0f6e6a;
+}
+
+.ghost,
+.danger {
+  border: 1px solid #b7d5d2;
+  background: transparent;
+  color: #0f6e6a;
+  padding: 0.42rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.ghost:hover:not(:disabled) {
+  background: rgba(15, 110, 106, 0.08);
+}
+
+.danger {
+  color: #8a2a22;
+  border-color: #e7b7b2;
+
+  &:hover:not(:disabled) {
+    background: rgba(138, 42, 34, 0.08);
+  }
+}
+
+.results-head h3 {
+  margin: 0;
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+.price {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  background: #fdeceb;
+  color: #8a2a22;
+  font-size: 0.78rem;
+  font-weight: 700;
+
+  &.ok {
+    background: #e6f5f0;
+    color: #0f5a4f;
+  }
+}
+
+.booked-tag {
+  margin-left: 0.4rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  background: #0f6e6a;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.empty-state {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background: #f3f6f8;
+  border: 1px dashed #c5d4da;
+  border-radius: 0.7rem;
+  animation: rise 280ms ease;
+
+  &.compact {
+    padding: 1rem;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-family: 'Syne', sans-serif;
+    color: #143848;
+  }
+
+  p {
+    margin: 0;
+    color: #5b6b76;
+  }
+}
+
+.ok,
+.err {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  border-radius: 0.6rem;
+}
+
+.ok {
+  background: #e6f5f0;
+  color: #0f5a4f;
+}
+
+.err {
+  background: #fdeceb;
+  color: #8a2a22;
+}
+
+.flash {
+  animation: rise 280ms ease;
+}
+
+.muted {
+  color: #5b6b76;
+}
+
+.booking-panel {
+  padding: 1.15rem 1.25rem;
+  background: linear-gradient(180deg, #f5fbf9 0%, #eef7f5 100%);
+  border: 1px solid #b7d5d2;
+  border-radius: 0.9rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.booking-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+
+  h3 {
+    margin: 0.2rem 0;
+    font-family: 'Fraunces', Georgia, serif;
+    color: #143848;
+  }
+}
+
+.booking-form {
+  box-shadow: none;
+}
+
+.booking-actions {
+  margin-top: 0.25rem;
+}
+
+.erp-table tbody tr.just-booked {
+  background: #eefaf6;
+  animation: softPulse 700ms ease;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softPulse {
+  0% {
+    background: #d8f3ec;
+  }
+  100% {
+    background: #eefaf6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash,
+  .empty-state,
+  .erp-table tbody tr.just-booked {
+    animation: none;
+  }
+}

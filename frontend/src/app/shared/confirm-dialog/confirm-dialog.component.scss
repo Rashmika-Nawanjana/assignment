@@ -1,0 +1,104 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(10, 28, 36, 0.55);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 160ms ease;
+}
+
+.modal {
+  width: min(100%, 420px);
+  padding: 1.35rem 1.4rem 1.2rem;
+  background: #fffcf8;
+  border: 1px solid #d7e0e6;
+  box-shadow: 0 24px 50px rgba(10, 28, 36, 0.28);
+  animation: rise 180ms ease;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0f6e6a;
+}
+
+h2 {
+  margin: 0.35rem 0 0.55rem;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.35rem;
+  color: #143848;
+}
+
+.message {
+  margin: 0 0 1.2rem;
+  color: #4a6570;
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.ghost,
+.confirm {
+  border: 1px solid #b7d5d2;
+  background: transparent;
+  color: #0f6e6a;
+  padding: 0.55rem 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirm {
+  border: 0;
+  background: #143848;
+  color: #fff;
+
+  &.danger {
+    background: #8a2a22;
+  }
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.06);
+  }
+}
+
+.ghost:hover:not(:disabled) {
+  background: rgba(15, 110, 106, 0.08);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+}

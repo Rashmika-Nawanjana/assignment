@@ -1,0 +1,168 @@
+<section class="panel">
+  <header class="head">
+    <div>
+      <p class="eyebrow">Administration</p>
+      <h2>Users</h2>
+      <p class="lede">Create accounts, assign roles, and keep the team list tidy.</p>
+    </div>
+    <div class="search-box">
+      <input
+        [(ngModel)]="q"
+        name="q"
+        placeholder="Search users…"
+        (keyup.enter)="search()"
+      />
+      <button type="button" (click)="search()">Search</button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+  @if (success()) {
+    <p class="ok">{{ success() }}</p>
+  }
+
+  <div class="layout">
+    <form class="erp-form editor" (ngSubmit)="save()">
+      <h3 class="section-title">{{ editingId ? 'Edit user' : 'New user' }}</h3>
+      <label>
+        Username
+        <input [(ngModel)]="form.username" name="username" required placeholder="login name" />
+      </label>
+      <label>
+        Password {{ editingId ? '(leave blank to keep)' : '' }}
+        <input [(ngModel)]="form.password" name="password" type="password" autocomplete="new-password" />
+        <span class="hint">{{ hint }}</span>
+      </label>
+      <label>
+        Full name
+        <input [(ngModel)]="form.fullName" name="fullName" required />
+      </label>
+      <label>
+        Email
+        <input [(ngModel)]="form.email" name="email" type="email" placeholder="optional" />
+      </label>
+      <label>
+        Role
+        <select [(ngModel)]="form.role" name="role">
+          @for (role of roles(); track role) {
+            <option [value]="role">{{ role }}</option>
+          }
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" [(ngModel)]="form.active" name="active" />
+        Active account
+      </label>
+      <div class="form-actions actions">
+        <button type="submit">{{ editingId ? 'Update user' : 'Create user' }}</button>
+        <button type="button" class="ghost" (click)="startCreate()">Clear</button>
+      </div>
+    </form>
+
+    <div class="table-card">
+      @if (loading()) {
+        <p class="muted">Loading…</p>
+      } @else if (users().length === 0) {
+        <div class="empty-state">
+          <strong>No users found</strong>
+          <p>Try another search, or create a user with the form.</p>
+        </div>
+      } @else {
+        <div class="table-toolbar">
+          <div class="filters">
+            <input
+              type="search"
+              [ngModel]="tableQuery()"
+              (ngModelChange)="tableQuery.set($event)"
+              name="tableQuery"
+              placeholder="Filter this page…"
+            />
+            <select
+              [ngModel]="roleFilter()"
+              (ngModelChange)="roleFilter.set($event)"
+              name="roleFilter"
+            >
+              <option value="all">All roles</option>
+              @for (role of roles(); track role) {
+                <option [value]="role">{{ role }}</option>
+              }
+            </select>
+            <select
+              [ngModel]="statusFilter()"
+              (ngModelChange)="statusFilter.set($event)"
+              name="statusFilter"
+            >
+              <option value="all">All statuses</option>
+              <option value="active">Active</option>
+              <option value="disabled">Disabled</option>
+            </select>
+          </div>
+          <span class="meta">Showing {{ displayedUsers().length }} of {{ users().length }}</span>
+        </div>
+
+        @if (displayedUsers().length === 0) {
+          <div class="empty-state compact">
+            <strong>No rows match your filters</strong>
+            <p>Clear filters to see users on this page again.</p>
+          </div>
+        } @else {
+          <div class="erp-table-wrap">
+            <table class="erp-table">
+              <thead>
+                <tr>
+                  <th
+                    class="sortable"
+                    [class.sorted]="sortKey() === 'fullName'"
+                    (click)="sortBy('fullName')"
+                  >
+                    User <span class="sort-mark">{{ sortMark('fullName') }}</span>
+                  </th>
+                  <th class="sortable" [class.sorted]="sortKey() === 'role'" (click)="sortBy('role')">
+                    Role <span class="sort-mark">{{ sortMark('role') }}</span>
+                  </th>
+                  <th
+                    class="sortable"
+                    [class.sorted]="sortKey() === 'active'"
+                    (click)="sortBy('active')"
+                  >
+                    Status <span class="sort-mark">{{ sortMark('active') }}</span>
+                  </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of displayedUsers(); track user.id) {
+                  <tr>
+                    <td>
+                      <strong>{{ user.fullName || user.username }}</strong>
+                      <div class="sub">{{ user.username }} · {{ user.email || 'no email' }}</div>
+                    </td>
+                    <td>{{ user.role }}</td>
+                    <td>
+                      <span class="status" [class.ok]="user.active">
+                        {{ user.active ? 'Active' : 'Disabled' }}
+                      </span>
+                    </td>
+                    <td class="row-actions">
+                      <button type="button" class="ghost" (click)="startEdit(user)">Edit</button>
+                      <button type="button" class="danger" (click)="remove(user)">Delete</button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        <app-pagination
+          [page]="page"
+          [totalPages]="totalPages()"
+          [totalElements]="totalElements()"
+          (pageChange)="onPage($event)"
+        ></app-pagination>
+      }
+    </div>
+  </div>
+</section>

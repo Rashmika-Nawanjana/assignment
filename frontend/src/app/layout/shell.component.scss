@@ -1,0 +1,240 @@
+.erp-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background: #e8eef2;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at top left, rgba(26, 166, 160, 0.22), transparent 45%),
+    linear-gradient(185deg, #0d2430 0%, #143848 55%, #102a36 100%);
+  color: #e8f1f4;
+  padding: 1.35rem 1rem 1rem;
+  box-shadow: 8px 0 24px rgba(10, 30, 40, 0.18);
+}
+
+.brand {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 1.4rem;
+  padding: 0.35rem 0.4rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  .mark {
+    width: 2.7rem;
+    height: 2.7rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.7rem;
+    background: linear-gradient(145deg, #24c2ba, #0f8f89);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    box-shadow: 0 8px 18px rgba(15, 143, 137, 0.35);
+  }
+
+  strong {
+    display: block;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.12rem;
+  }
+
+  small {
+    color: rgba(232, 241, 244, 0.68);
+    font-size: 0.78rem;
+  }
+}
+
+.nav-label {
+  margin: 0.85rem 0.55rem 0.45rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(232, 241, 244, 0.45);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+nav {
+  display: grid;
+  gap: 0.35rem;
+  flex: 1;
+  align-content: start;
+
+  a {
+    display: grid;
+    grid-template-columns: 2.1rem 1fr;
+    gap: 0.65rem;
+    align-items: center;
+    padding: 0.72rem 0.7rem;
+    color: rgba(232, 241, 244, 0.82);
+    text-decoration: none;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+
+    .icon {
+      width: 2.1rem;
+      height: 2.1rem;
+      display: grid;
+      place-items: center;
+      border-radius: 0.55rem;
+      background: rgba(255, 255, 255, 0.06);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    strong {
+      display: block;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    small {
+      display: block;
+      margin-top: 0.08rem;
+      color: rgba(232, 241, 244, 0.55);
+      font-size: 0.72rem;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(2px);
+    }
+
+    &.active {
+      background: rgba(26, 166, 160, 0.18);
+      border-color: rgba(26, 166, 160, 0.45);
+      color: #fff;
+
+      .icon {
+        background: rgba(26, 166, 160, 0.28);
+      }
+    }
+  }
+}
+
+.sidebar-foot {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+
+  .who {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: center;
+  }
+
+  .avatar {
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: #1aa6a0;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.88rem;
+  }
+
+  span {
+    color: rgba(232, 241, 244, 0.62);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.68rem;
+  }
+
+  button {
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.04);
+    color: inherit;
+    padding: 0.55rem 0.7rem;
+    border-radius: 0.55rem;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.main-area {
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid #d7e0e6;
+  backdrop-filter: blur(8px);
+
+  .eyebrow {
+    margin: 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1aa6a0;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+  }
+
+  h1 {
+    margin: 0.15rem 0 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.5rem;
+    color: #143848;
+  }
+
+  .chip {
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: #e7f6f4;
+    color: #0f6e6a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+}
+
+.content {
+  padding: 1.25rem 1.5rem 2rem;
+}
+
+@media (max-width: 900px) {
+  .erp-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  nav {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    overflow-x: auto;
+  }
+
+  nav a small {
+    display: none;
+  }
+}

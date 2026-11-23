@@ -1,0 +1,279 @@
+<section class="panel">
+  <header>
+    <p class="eyebrow">Call center</p>
+    <h2>Room search</h2>
+    <p class="lede">
+      Enter the stay, find matching rooms with prices (including markup), then book with guest details.
+    </p>
+  </header>
+
+  <form class="erp-form editor" (ngSubmit)="onSubmit()" #form="ngForm">
+    <div class="form-section">
+      <h3 class="section-title">1 · Stay details</h3>
+      <div class="field-grid">
+        <label>
+          Check-in date
+          <input type="date" name="checkInDate" [(ngModel)]="checkInDate" required [disabled]="loading()" />
+          <span class="hint">Must fall inside an active hotel contract</span>
+        </label>
+        <label>
+          Number of nights
+          <input
+            type="number"
+            min="1"
+            name="numberOfNights"
+            [(ngModel)]="numberOfNights"
+            required
+            [disabled]="loading()"
+          />
+          <span class="hint">Price uses nights × adults × room rate × markup</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="rooms-head">
+        <h3 class="section-title">2 · Rooms needed</h3>
+        <button type="button" class="ghost" (click)="addRoom()" [disabled]="loading()">Add room</button>
+      </div>
+      <p class="hint room-hint">Tell us how many adults will stay in each room so we can check capacity.</p>
+
+      @for (room of rooms; track $index; let i = $index) {
+        <div class="room-row">
+          <label>
+            Room {{ i + 1 }} · adults
+            <input type="number" min="1" [(ngModel)]="room.adults" [name]="'a' + i" required />
+          </label>
+          <button type="button" class="danger" (click)="removeRoom(i)" [disabled]="rooms.length === 1">
+            Remove
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Searching…' : 'Find rooms' }}
+      </button>
+    </div>
+  </form>
+
+  @if (error()) {
+    <p class="err flash" role="alert">{{ error() }}</p>
+  }
+  @if (success()) {
+    <p class="ok flash" role="status">
+      {{ success() }}
+      <button type="button" class="ghost" (click)="goToBookings()">View bookings</button>
+    </p>
+  }
+
+  @if (searched() && !loading()) {
+    <div class="table-card results">
+      <div class="results-head">
+        <div>
+          <h3>Search results</h3>
+          <p class="hint">Click a column header to sort. Filter by hotel or availability.</p>
+        </div>
+      </div>
+
+      @if (results().length === 0) {
+        <div class="empty-state">
+          <strong>No rooms matched this stay</strong>
+          <p>
+            No contracts cover these dates, or the request is too large. Try another check-in date, fewer
+            nights, or fewer rooms/adults.
+          </p>
+        </div>
+      } @else {
+        <div class="table-toolbar">
+          <div class="filters">
+            <input
+              type="search"
+              [ngModel]="resultQuery()"
+              (ngModelChange)="onFilterQuery($event)"
+              name="resultQuery"
+              placeholder="Filter by hotel or room type…"
+            />
+            <select
+              [ngModel]="availabilityFilter()"
+              (ngModelChange)="onAvailabilityFilter($event)"
+              name="availabilityFilter"
+            >
+              <option value="all">All availability</option>
+              <option value="Available">Available only</option>
+              <option value="Not available">Not available</option>
+            </select>
+          </div>
+          <span class="meta">
+            {{ filteredResults().length }} match{{ filteredResults().length === 1 ? '' : 'es' }} ·
+            {{ results().length }} total
+          </span>
+        </div>
+
+        @if (filteredResults().length === 0) {
+          <div class="empty-state compact">
+            <strong>No rows match your filters</strong>
+            <p>Clear the text filter or set availability back to “All”.</p>
+          </div>
+        } @else {
+          <div class="erp-table-wrap">
+            <table class="erp-table">
+              <thead>
+                <tr>
+                  <th
+                    class="sortable"
+                    [class.sorted]="sortKey() === 'hotelName'"
+                    (click)="sortBy('hotelName')"
+                  >
+                    Hotel <span class="sort-mark">{{ sortMark('hotelName') }}</span>
+                  </th>
+                  <th
+                    class="sortable"
+                    [class.sorted]="sortKey() === 'roomType'"
+                    (click)="sortBy('roomType')"
+                  >
+                    Room type <span class="sort-mark">{{ sortMark('roomType') }}</span>
+                  </th>
+                  <th class="sortable" [class.sorted]="sortKey() === 'price'" (click)="sortBy('price')">
+                    Price (total) <span class="sort-mark">{{ sortMark('price') }}</span>
+                  </th>
+                  <th
+                    class="sortable"
+                    [class.sorted]="sortKey() === 'availabilityStatus'"
+                    (click)="sortBy('availabilityStatus')"
+                  >
+                    Availability <span class="sort-mark">{{ sortMark('availabilityStatus') }}</span>
+                  </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of displayedResults(); track row.roomTypeId) {
+                  <tr [class.just-booked]="lastBookedRoomTypeId() === row.roomTypeId">
+                    <td>
+                      <strong>{{ row.hotelName }}</strong>
+                    </td>
+                    <td>
+                      {{ row.roomType }}
+                      @if (lastBookedRoomTypeId() === row.roomTypeId) {
+                        <span class="booked-tag">Just booked</span>
+                      }
+                    </td>
+                    <td class="price">${{ row.price | number: '1.2-2' }}</td>
+                    <td>
+                      <span class="status" [class.ok]="row.availabilityStatus === 'Available'">
+                        {{ row.availabilityStatus }}
+                      </span>
+                    </td>
+                    <td>
+                      @if (row.availabilityStatus === 'Available') {
+                        <button type="button" class="book" (click)="openBookingForm(row)">
+                          Book room
+                        </button>
+                      } @else {
+                        <span class="muted">—</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <app-pagination
+            [page]="page()"
+            [totalPages]="totalPages()"
+            [totalElements]="filteredResults().length"
+            (pageChange)="onPage($event)"
+          ></app-pagination>
+        }
+      }
+    </div>
+  }
+
+  @if (selected(); as current) {
+    <div id="booking-panel" class="booking-panel flash">
+      <div class="booking-head">
+        <div>
+          <p class="eyebrow">Book this room</p>
+          <h3>{{ current.hotelName }} · {{ current.roomType }}</h3>
+          <p class="muted">
+            {{ checkInDate }} · {{ numberOfNights }} night(s) · ${{ current.price | number: '1.2-2' }} search total
+          </p>
+        </div>
+        <button type="button" class="ghost" (click)="closeBookingForm()">Close</button>
+      </div>
+
+      @if (bookingError()) {
+        <p id="booking-error" class="err flash" role="alert">{{ bookingError() }}</p>
+      }
+
+      <form class="erp-form booking-form" (ngSubmit)="confirmBooking()" #bookForm="ngForm">
+        <div class="form-section">
+          <h4 class="section-title">Choose room &amp; guest</h4>
+          <div class="field-grid">
+            <label>
+              Room number *
+              <select
+                name="roomNumber"
+                [(ngModel)]="roomNumber"
+                required
+                [disabled]="booking() || loadingRooms() || availableRoomNumbers().length === 0"
+              >
+                @if (loadingRooms()) {
+                  <option value="">Loading free rooms…</option>
+                } @else if (availableRoomNumbers().length === 0) {
+                  <option value="">No rooms free</option>
+                } @else {
+                  @for (num of availableRoomNumbers(); track num) {
+                    <option [value]="num">Room {{ num }}</option>
+                  }
+                }
+              </select>
+              <span class="hint">Only free rooms for these dates are listed</span>
+            </label>
+            <label>
+              Adults in this room *
+              <input
+                type="number"
+                min="1"
+                name="adultsForBooking"
+                [(ngModel)]="adultsForBooking"
+                required
+                [disabled]="booking()"
+              />
+            </label>
+            <label>
+              Guest full name *
+              <input name="guestName" [(ngModel)]="guestName" required [disabled]="booking()" />
+            </label>
+            <label>
+              NIC / ID number *
+              <input name="guestNic" [(ngModel)]="guestNic" required [disabled]="booking()" />
+            </label>
+            <label>
+              Phone
+              <input name="guestPhone" [(ngModel)]="guestPhone" [disabled]="booking()" />
+              <span class="hint">Optional</span>
+            </label>
+            <label>
+              Email
+              <input name="guestEmail" type="email" [(ngModel)]="guestEmail" [disabled]="booking()" />
+              <span class="hint">Optional</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions booking-actions">
+          <button type="submit" [disabled]="booking() || loadingRooms() || !roomNumber">
+            {{ booking() ? 'Confirming…' : 'Confirm booking' }}
+          </button>
+          <button type="button" class="ghost" (click)="closeBookingForm()" [disabled]="booking()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</section>

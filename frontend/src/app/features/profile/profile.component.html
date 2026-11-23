@@ -1,0 +1,56 @@
+<section class="panel">
+  <header>
+    <p class="eyebrow">Account</p>
+    <h2>Profile</h2>
+    <p class="lede">Update your details or change your password.</p>
+  </header>
+
+  @if (message()) {
+    <p class="ok">{{ message() }}</p>
+  }
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+
+  <div class="grid">
+    <form class="erp-form" (ngSubmit)="saveProfile()">
+      <h3 class="section-title">Details</h3>
+      <label>
+        Username
+        <input [value]="auth.currentUser()?.username" disabled />
+        <span class="hint">Username cannot be changed</span>
+      </label>
+      <label>
+        Role
+        <input [value]="auth.currentUser()?.role" disabled />
+      </label>
+      <label>
+        Full name
+        <input name="fullName" [(ngModel)]="fullName" required />
+      </label>
+      <label>
+        Email
+        <input name="email" type="email" [(ngModel)]="email" placeholder="optional" />
+      </label>
+      <div class="form-actions">
+        <button type="submit" [disabled]="saving()">Save profile</button>
+      </div>
+    </form>
+
+    <form class="erp-form" (ngSubmit)="changePassword()">
+      <h3 class="section-title">Change password</h3>
+      <label>
+        Current password
+        <input type="password" name="currentPassword" [(ngModel)]="currentPassword" required />
+      </label>
+      <label>
+        New password
+        <input type="password" name="newPassword" [(ngModel)]="newPassword" required />
+        <span class="hint">{{ hint }}</span>
+      </label>
+      <div class="form-actions">
+        <button type="submit" [disabled]="saving()">Update password</button>
+      </div>
+    </form>
+  </div>
+</section>

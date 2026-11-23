@@ -1,0 +1,19 @@
+<div class="app-frame">
+  @if (authService.currentUser(); as user) {
+    <header class="topbar">
+      <a routerLink="/search" class="brand">Sun Travels</a>
+      <nav>
+        <a routerLink="/contracts" routerLinkActive="active">Contracts</a>
+        <a routerLink="/search" routerLinkActive="active">Search</a>
+      </nav>
+      <div class="user-meta">
+        <span>{{ user.username }} · {{ user.role }}</span>
+        <button type="button" (click)="logout()">Sign out</button>
+      </div>
+    </header>
+  }
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

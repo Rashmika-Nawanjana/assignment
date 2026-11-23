@@ -1,0 +1,203 @@
+<section class="panel">
+  <header class="head">
+    <div>
+      <p class="eyebrow">Contracts</p>
+      <h2>Hotel contracts</h2>
+      <p class="lede">Load a contract with room rates and markup, then browse or edit existing ones.</p>
+    </div>
+    <div class="search-box">
+      <input
+        [(ngModel)]="q"
+        name="q"
+        placeholder="Search contracts by hotel…"
+        (keyup.enter)="search()"
+      />
+      <button type="button" (click)="search()">Search</button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+  @if (success()) {
+    <p class="ok">{{ success() }}</p>
+  }
+
+  @if (canEdit) {
+    <form class="erp-form editor" (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="editor-head">
+        <div>
+          <h3 class="section-title">{{ editingId ? 'Edit contract' : 'New contract' }}</h3>
+          <p class="hint">Hotelier rates are stored before markup. Search prices multiply by markup.</p>
+        </div>
+        <button type="button" class="ghost" (click)="clearForm()">Clear</button>
+      </div>
+
+      <div class="form-section">
+        <div class="field-grid">
+          <label>
+            Hotel name
+            <input [(ngModel)]="hotelName" name="hotelName" required placeholder="e.g. Velvet Vista Hotel" />
+          </label>
+          <label>
+            Markup multiplier
+            <input type="number" step="0.001" min="1" [(ngModel)]="markup" name="markup" required />
+            <span class="hint">1.15 = 15% markup on the hotelier rate</span>
+          </label>
+          <label>
+            Valid from
+            <input type="date" [(ngModel)]="validFrom" name="validFrom" required />
+          </label>
+          <label>
+            Valid to
+            <input type="date" [(ngModel)]="validTo" name="validTo" required />
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="rooms-head">
+          <h4 class="section-title">Room types</h4>
+          <button type="button" class="ghost" (click)="addRoomRow()">Add room type</button>
+        </div>
+
+        @for (room of roomTypes; track $index; let i = $index) {
+          <div class="room-row">
+            <label>
+              Room type name
+              <input [(ngModel)]="room.name" [name]="'n' + i" required placeholder="e.g. premium room" />
+            </label>
+            <label>
+              Price / person / night
+              <input
+                type="number"
+                step="0.01"
+                min="0.01"
+                [(ngModel)]="room.pricePerPersonPerNight"
+                [name]="'p' + i"
+                required
+              />
+            </label>
+            <label>
+              No. of rooms
+              <input type="number" min="1" [(ngModel)]="room.numberOfRooms" [name]="'r' + i" required />
+            </label>
+            <label>
+              Max adults
+              <input type="number" min="1" [(ngModel)]="room.maxAdults" [name]="'a' + i" required />
+            </label>
+            <div class="room-remove">
+              <button
+                type="button"
+                class="danger"
+                (click)="removeRoomRow(i)"
+                [disabled]="roomTypes.length === 1"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : editingId ? 'Update contract' : 'Save contract' }}
+        </button>
+      </div>
+    </form>
+  }
+
+  <div class="table-card">
+    @if (loading()) {
+      <p class="muted">Loading contracts…</p>
+    } @else if (contracts().length === 0) {
+      <div class="empty-state">
+        <strong>No contracts found</strong>
+        <p>Try another hotel search, or add a contract if you manage inventory.</p>
+      </div>
+    } @else {
+      <div class="table-toolbar">
+        <div class="filters">
+          <input
+            type="search"
+            [ngModel]="tableQuery()"
+            (ngModelChange)="tableQuery.set($event)"
+            name="tableQuery"
+            placeholder="Filter this page…"
+          />
+        </div>
+        <span class="meta">Showing {{ displayedContracts().length }} of {{ contracts().length }} on page</span>
+      </div>
+
+      @if (displayedContracts().length === 0) {
+        <div class="empty-state compact">
+          <strong>No rows match this filter</strong>
+          <p>Clear the page filter to see contracts again.</p>
+        </div>
+      } @else {
+        <div class="erp-table-wrap">
+          <table class="erp-table">
+            <thead>
+              <tr>
+                <th
+                  class="sortable"
+                  [class.sorted]="sortKey() === 'hotelName'"
+                  (click)="sortBy('hotelName')"
+                >
+                  Hotel <span class="sort-mark">{{ sortMark('hotelName') }}</span>
+                </th>
+                <th
+                  class="sortable"
+                  [class.sorted]="sortKey() === 'validFrom'"
+                  (click)="sortBy('validFrom')"
+                >
+                  Valid <span class="sort-mark">{{ sortMark('validFrom') }}</span>
+                </th>
+                <th class="sortable" [class.sorted]="sortKey() === 'markup'" (click)="sortBy('markup')">
+                  Markup <span class="sort-mark">{{ sortMark('markup') }}</span>
+                </th>
+                <th>Rooms</th>
+                @if (canEdit) {
+                  <th></th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (contract of displayedContracts(); track contract.id) {
+                <tr>
+                  <td>
+                    <strong>{{ contract.hotelName }}</strong>
+                  </td>
+                  <td>{{ contract.validFrom }} → {{ contract.validTo }}</td>
+                  <td class="mono">{{ contract.markup }}</td>
+                  <td>
+                    @for (room of contract.roomTypes; track $index) {
+                      <div class="chip">
+                        {{ room.name }} · ${{ room.pricePerPersonPerNight }} · {{ room.numberOfRooms }} rms ·
+                        max {{ room.maxAdults }}
+                      </div>
+                    }
+                  </td>
+                  @if (canEdit) {
+                    <td class="row-actions">
+                      <button type="button" class="ghost" (click)="startEdit(contract)">Edit</button>
+                      <button type="button" class="danger" (click)="remove(contract)">Delete</button>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <app-pagination
+        [page]="page"
+        [totalPages]="totalPages()"
+        [totalElements]="totalElements()"
+        (pageChange)="onPage($event)"
+      ></app-pagination>
+    }
+  </div>
+</section>

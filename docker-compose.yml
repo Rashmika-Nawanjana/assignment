@@ -1,0 +1,37 @@
+# Sun Travels — MySQL only (app still runs on the host)
+# Usage:
+#   docker compose up -d
+#   docker compose down          # stop
+#   docker compose down -v       # stop + wipe data (re-runs schema on next up)
+#
+# App connects to: localhost:3306 / suntravels / suntravels
+# Demo users + dummy hotels are seeded by Spring Boot on first API start.
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: suntravels-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: suntravels
+      MYSQL_USER: suntravels
+      MYSQL_PASSWORD: suntravels
+    volumes:
+      - suntravels_mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=caching_sha2_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+volumes:
+  suntravels_mysql_data:

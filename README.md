@@ -1,6 +1,6 @@
 # Sun Travels ERP
 
-Hotel contract management and call-center room search.
+Hotel contract management and call-center room search (Spring Boot + Angular + MySQL).
 
 ## Roles
 
@@ -10,16 +10,41 @@ Hotel contract management and call-center room search.
 | **MANAGER** | Create/edit/delete contracts + search |
 | **ADMIN** | Users + everything |
 
-## Run
+## Quick start (new machine)
 
-1. MySQL: run `database/init.sql` once (Workbench as root)
-2. API: `cd backend && ./mvnw spring-boot:run`
-3. UI: `cd frontend && npm start`
+### 1. Database (Docker)
 
-- UI http://localhost:4200
-- API http://localhost:8080
+Install Docker Desktop, then from the project root:
 
-## Demo users (strong passwords)
+```bash
+docker compose up -d
+```
+
+This starts MySQL 8, creates DB/user `suntravels` / `suntravels`, and runs `database/schema.sql`.
+
+Details: [database/README.md](database/README.md)
+
+### 2. Backend
+
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+On first start the API seeds demo users and optional dummy hotels/bookings.
+
+### 3. Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+- UI http://localhost:4200  
+- API http://localhost:8080  
+
+## Demo users
 
 | User | Password | Role |
 |------|----------|------|
@@ -32,3 +57,7 @@ Public **Sign up** creates an AGENT account (strong password required).
 ## Pricing
 
 `price = hotelPrice × markup × nights × adults` (markup `1.15` = 15%)
+
+## Without Docker
+
+Use a local MySQL 8 instance and run `database/init.sql` (see [database/README.md](database/README.md)). `application.properties` already points at `localhost:3306`.

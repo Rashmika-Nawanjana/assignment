@@ -1,5 +1,5 @@
--- Sun Travels logical schema (matches Java entities)
-USE suntravels;
+-- Sun Travels schema (loaded by Docker on first MySQL start)
+-- Also safe to run manually after: USE suntravels;
 
 CREATE TABLE IF NOT EXISTS users (
   id         BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   room_type_id     BIGINT         NOT NULL,
   hotel_name       VARCHAR(150)   NOT NULL,
   room_type_name   VARCHAR(100)   NOT NULL,
+  room_number      VARCHAR(20)    NULL,
   check_in_date    DATE           NOT NULL,
   number_of_nights INT            NOT NULL,
   rooms_requested  INT            NOT NULL,
@@ -53,10 +54,13 @@ CREATE TABLE IF NOT EXISTS bookings (
   guest_phone      VARCHAR(30),
   guest_email      VARCHAR(120),
   status           VARCHAR(20)    NOT NULL,
-  created_at       TIMESTAMP      NOT NULL,
+  created_at       TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_booking_user FOREIGN KEY (booked_by_id) REFERENCES users (id),
   CONSTRAINT fk_booking_room FOREIGN KEY (room_type_id) REFERENCES room_types (id)
 );
 
 CREATE INDEX idx_contracts_dates ON contracts (valid_from, valid_to);
 CREATE INDEX idx_contracts_hotel ON contracts (hotel_id);
+CREATE INDEX idx_bookings_room_type ON bookings (room_type_id);
+CREATE INDEX idx_bookings_status_dates ON bookings (status, check_in_date);
+CREATE INDEX idx_bookings_room_number ON bookings (room_type_id, room_number, status);

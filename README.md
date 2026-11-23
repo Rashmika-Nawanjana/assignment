@@ -58,6 +58,22 @@ Public **Sign up** creates an AGENT account (strong password required).
 
 `price = hotelPrice × markup × nights × adults` (markup `1.15` = 15%)
 
+## Submission / evaluation docs
+
+| Document | Path |
+|----------|------|
+| Evaluation checklist | [docs/EVALUATION-CHECKLIST.md](docs/EVALUATION-CHECKLIST.md) |
+| ER diagram | [docs/ER-DIAGRAM.md](docs/ER-DIAGRAM.md) |
+| User stories | [docs/USER-STORIES.md](docs/USER-STORIES.md) |
+| User manual | [docs/USER-MANUAL.md](docs/USER-MANUAL.md) |
+| Test plan | [docs/TEST-PLAN.md](docs/TEST-PLAN.md) |
+| Test cases | [docs/TEST-CASES.md](docs/TEST-CASES.md) |
+| Peer testing log | [docs/PEER-TESTING.md](docs/PEER-TESTING.md) |
+
+```bash
+cd backend && ./mvnw test
+```
+
 ## Without Docker
 
 Use a local MySQL 8 instance and run `database/init.sql` (see [database/README.md](database/README.md)). `application.properties` already points at `localhost:3306`.
